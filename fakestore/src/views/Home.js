@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Row, Col } from 'react-bootstrap'
 
 import ProductCard from '../components/ProductCard'
+import Delete from '../components/Delete'
 import { limLen, formatPrice } from '../helpers'
 
 import arrow from '../images/arrow.png'
@@ -12,7 +13,8 @@ export default class Home extends Component {
 		super();
 		this.state = {
 			products: [],
-			page: 1
+			page: 1,
+			delProduct: null
 		}
 	}
 
@@ -34,6 +36,7 @@ export default class Home extends Component {
 		let products = response.data;
 		for (let product of products) {
 			// I couldn't get the gosh diddly darn CSS lineClamp thing to work
+			product.descFull = product.description;
 			product.description = limLen(product.description, 100);
 			product.price = formatPrice(product.price);
 		}
@@ -51,6 +54,20 @@ export default class Home extends Component {
 		this.getProducts(1);
 	}
 
+	deletePrompt = (product) => {
+		this.setState({ delProduct: product });
+	}
+
+	closePrompt = () => {
+		this.setState({ delProduct: null });
+	}
+
+	// Probably works, impossible to know since deleting doesn't do anything
+	delete = (product) => {
+		this.closePrompt();
+		axios.delete(`https://fakestoreapi.com/products/${product.id}`);
+	}
+
 	render() {
 		const styles = {
 			nextArrow: { position: 'fixed', right: '25px', top: '50%', transform: 'translate(0, -50%)' },
@@ -61,10 +78,11 @@ export default class Home extends Component {
 
 		return (
 			<div>
+				<Delete product={this.state.delProduct} delete={this.delete} closePrompt={this.closePrompt} />
 				<img onClick={() => this.setPage(2)} style={this.state.page === 2 ? styles.nextArrowGray : styles.nextArrow} src={arrow} alt='next' />
 				<img onClick={() => this.setPage(1)} style={this.state.page === 1 ? styles.prevArrowGray : styles.prevArrow} src={arrow} alt='prev' />
 				<Row style={{ width: '85%', marginLeft: 'auto', marginRight: 'auto', marginTop: '50px' }}>
-					{this.state.products.map((prod) => <Col key={prod.id} style={{ marginBottom: '55px' }}><ProductCard product={prod} /></Col>)}
+					{this.state.products.map((prod) => <Col key={prod.id} style={{ marginBottom: '55px' }}><ProductCard editProduct={this.props.editProduct} deletePrompt={this.deletePrompt} product={prod} /></Col>)}
 				</Row>
 			</div>
 		)

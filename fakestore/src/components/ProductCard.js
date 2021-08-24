@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card } from 'react-bootstrap'
+import { Card, Button } from 'react-bootstrap'
 import { titleCase } from '../helpers.js'
 
 export default class ProductCard extends Component {
@@ -14,6 +14,10 @@ export default class ProductCard extends Component {
 						<Card.Text className='text-success' style={{ marginLeft: 'auto' }}>{this.props.product.price}</Card.Text>
 					</div>
 					<Card.Text>{this.props.product.description}</Card.Text>
+					<div style={{ display: 'flex' }}>
+						<Button onClick={() => this.props.editProduct(this.props.product)} className='btn-primary'>Edit</Button>
+						<Button onClick={() => this.props.deletePrompt(this.props.product)} className='btn-danger' style={{ marginLeft: 'auto' }}>Delete</Button>
+					</div>
 				</Card.Body>
 			</Card>
 		)

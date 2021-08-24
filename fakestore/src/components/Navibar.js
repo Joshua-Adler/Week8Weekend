@@ -12,10 +12,10 @@ export default class Navibar extends Component {
 				<Navbar bg='dark' variant='dark'>
 					<Container>
 						<Nav className='me-auto'>
-							{localStorage.getItem('token') ?
+							{this.props.name ?
 								<>
-									<Navbar.Brand>{titleCase(localStorage.getItem('name'))}</Navbar.Brand>
-									<Nav.Link as={Link} to='/'>Home</Nav.Link>
+									<Navbar.Brand>{titleCase(this.props.name)}</Navbar.Brand>
+									<Nav.Link as={Link} to='/create'>Create Product</Nav.Link>
 									<Nav.Link as={Link} to='/logout'>Log Out</Nav.Link>
 								</>
 								:

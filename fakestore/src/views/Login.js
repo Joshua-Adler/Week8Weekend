@@ -5,6 +5,8 @@ import { Button } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 
+import { findName } from '../helpers'
+
 const schema = Yup.object().shape({
 	username: Yup.string().required('Required'),
 	password: Yup.string()
@@ -24,34 +26,34 @@ export default class Login extends Component {
 		}
 	}
 
-	// There's no way to get the user from the username :/
-	async findName(username) {
-		let response = await axios.get('https://fakestoreapi.com/users');
-		let data = response.data;
-		let name = '?????';
-		for (let user of data) {
-			if (user.username === username) {
-				name = `${user.name.firstname} ${user.name.lastname}`;
-				break;
-			}
+	componentDidMount() {
+		let username = localStorage.getItem('username');
+		if (username) {
+			// Hey, I found a use for that thing y'all said we'd never use
+			(async (username) => {
+				let data = await this.attemptLogin(username, ' ');
+				if (data.token) {
+					findName(data.token, username, this.props.login, () => this.setState({ status: 'SUCCESS' }));
+				}
+			})(username);
 		}
-		localStorage.setItem('name', name);
-		this.props.update();
 	}
 
-	handleSubmit = async ({ username, password }) => {
-		// This has to happen because, um, reasons
+	async attemptLogin(username, password) {
 		if (password === '') password = ' ';
-		// Get the data
 		let response = await axios.post('https://fakestoreapi.com/auth/login', {
 			username, password
 		});
-		let data = response.data;
+		return response.data;
+	}
+
+	handleSubmit = async ({ username, password }) => {
+		// Get the data
+		let data = await this.attemptLogin(username, password);
 		// A token only exists if the user logged in successfully
 		if (data.token) {
-			localStorage.setItem('token', data.token);
-			this.setState({ status: 'SUCCESS' });
-			this.findName(username);
+			localStorage.setItem('username', username);
+			findName(data.token, username, this.props.login, () => this.setState({ status: 'SUCCESS' }));
 		} else {
 			this.setState({ status: 'FAILURE' });
 		}
