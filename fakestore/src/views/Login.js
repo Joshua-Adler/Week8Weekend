@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 
-import { findName } from '../helpers'
+import { findUser } from '../helpers'
 
 const schema = Yup.object().shape({
 	username: Yup.string().required('Required'),
@@ -33,7 +33,7 @@ export default class Login extends Component {
 			(async (username) => {
 				let data = await this.attemptLogin(username, ' ');
 				if (data.token) {
-					findName(data.token, username, this.props.login, () => this.setState({ status: 'SUCCESS' }));
+					findUser(data.token, username, this.props.login, () => this.setState({ status: 'SUCCESS' }));
 				}
 			})(username);
 		}
@@ -53,7 +53,7 @@ export default class Login extends Component {
 		// A token only exists if the user logged in successfully
 		if (data.token) {
 			localStorage.setItem('username', username);
-			findName(data.token, username, this.props.login, () => this.setState({ status: 'SUCCESS' }));
+			findUser(data.token, username, this.props.login, () => this.setState({ status: 'SUCCESS' }));
 		} else {
 			this.setState({ status: 'FAILURE' });
 		}

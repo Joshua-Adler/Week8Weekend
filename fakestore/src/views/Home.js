@@ -37,7 +37,7 @@ export default class Home extends Component {
 		for (let product of products) {
 			// I couldn't get the gosh diddly darn CSS lineClamp thing to work
 			product.descFull = product.description;
-			product.description = limLen(product.description, 100);
+			product.description = limLen(product.description, 200);
 			product.price = formatPrice(product.price);
 		}
 		this.setState({ products });
@@ -82,7 +82,10 @@ export default class Home extends Component {
 				<img onClick={() => this.setPage(2)} style={this.state.page === 2 ? styles.nextArrowGray : styles.nextArrow} src={arrow} alt='next' />
 				<img onClick={() => this.setPage(1)} style={this.state.page === 1 ? styles.prevArrowGray : styles.prevArrow} src={arrow} alt='prev' />
 				<Row style={{ width: '85%', marginLeft: 'auto', marginRight: 'auto', marginTop: '50px' }}>
-					{this.state.products.map((prod) => <Col key={prod.id} style={{ marginBottom: '55px' }}><ProductCard editProduct={this.props.editProduct} deletePrompt={this.deletePrompt} product={prod} /></Col>)}
+					{this.state.products.map((prod) => <Col key={prod.id} style={{ marginBottom: '55px' }}>
+						<ProductCard cart={this.props.cart}
+							editProduct={this.props.editProduct} deletePrompt={this.deletePrompt} product={prod} />
+					</Col>)}
 				</Row>
 			</div>
 		)

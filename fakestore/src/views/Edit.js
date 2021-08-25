@@ -31,7 +31,9 @@ export default class Edit extends Component {
 	}
 
 	componentDidMount() {
-		// I tried to do it the other way, but it wasn't working and I literally have 10 minutes before this is due
+		// I tried to do it the other way, but it wasn't working
+		// Not sure how to solve this w/o forceUpdate, making a new initVals
+		// variable and using setState didn't even update the variable for some reason
 
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.initVals.title = this.props.product.title;
