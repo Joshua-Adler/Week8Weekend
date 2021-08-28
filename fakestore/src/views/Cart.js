@@ -32,35 +32,45 @@ export default class Cart extends Component {
 	}
 
 	render() {
+		let total = 0;
+		if (this.state.allProducts) {
+			for (let product of this.props.cart.products) {
+				total += this.state.allProducts[product.productId].price * product.quantity;
+			}
+			// Just found out this is a thing
+			total = total.toFixed(2);
+		}
 		return (
-			<Table style={{ margin: '50px', width: '90vw' }}>
-				<thead>
-					<tr>
-						<th>Title</th>
-						<th>Price</th>
-						<th>Description</th>
-						<th>Category</th>
-						<th>Image</th>
-						<th>Amount</th>
-					</tr>
-				</thead>
-				{this.state.allProducts ?
-					<tbody>
-						{this.props.cart.products.map(product =>
-							<tr>
-								<td>{this.state.allProducts[product.productId].title}</td>
-								<td>{formatPrice(this.state.allProducts[product.productId].price)}</td>
-								<td>{this.state.allProducts[product.productId].description}</td>
-								<td>{this.state.allProducts[product.productId].category}</td>
-								<td><img style={{ width: '200px' }} src={this.state.allProducts[product.productId].image} alt='img'></img></td>
-								<td>{product.quantity}</td>
-							</tr>
-						)
-						}
-					</tbody>
-					: null}
-			</Table>
-
+			<>
+				Price total: ${total}
+				<Table style={{ margin: '50px', width: '90vw' }}>
+					<thead>
+						<tr>
+							<th>Title</th>
+							<th>Price</th>
+							<th>Description</th>
+							<th>Category</th>
+							<th>Image</th>
+							<th>Amount</th>
+						</tr>
+					</thead>
+					{this.state.allProducts ?
+						<tbody>
+							{this.props.cart.products.map(product =>
+								<tr>
+									<td>{this.state.allProducts[product.productId].title}</td>
+									<td>{formatPrice(this.state.allProducts[product.productId].price)}</td>
+									<td>{this.state.allProducts[product.productId].description}</td>
+									<td>{this.state.allProducts[product.productId].category}</td>
+									<td><img style={{ width: '200px' }} src={this.state.allProducts[product.productId].image} alt='img'></img></td>
+									<td>{product.quantity}</td>
+								</tr>
+							)
+							}
+						</tbody>
+						: null}
+				</Table>
+			</>
 		)
 	}
 }
