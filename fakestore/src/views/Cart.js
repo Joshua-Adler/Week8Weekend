@@ -53,7 +53,7 @@ export default class Cart extends Component {
 								<td>{this.state.allProducts[product.productId].description}</td>
 								<td>{this.state.allProducts[product.productId].category}</td>
 								<td><img style={{ width: '200px' }} src={this.state.allProducts[product.productId].image} alt='img'></img></td>
-								<td>product.quantity</td>
+								<td>{product.quantity}</td>
 							</tr>
 						)
 						}
